@@ -42,10 +42,10 @@ module.exports = {
   },
   async create(req, res) {
     try {
-      const { nama, alamat } = req.body
+      const { nama, alamat, email, password } = req.body
       
       // Validasi input
-      if (!nama || !alamat) {
+      if (!nama || !email || !password || !alamat ) {
         return res.status(400).json({ error: 'Data yang diberikan tidak valid.' })
       }
 
@@ -53,6 +53,8 @@ module.exports = {
       const newCustomer = await prismadb.customer.create({
         data: {
           nama,
+          email,
+          password,
           alamat
         }
       })

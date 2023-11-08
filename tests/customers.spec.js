@@ -29,7 +29,7 @@ describe("customers.get function", () => {
   //uji edge case ketika data kosong
   test("res.json called with no result", async () => {
     const req = mockRequest({}, {
-        page:2
+        page:10
     })
     const res = mockResponse()
     await base.get(req, res)

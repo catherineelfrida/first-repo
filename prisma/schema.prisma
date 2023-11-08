@@ -12,6 +12,8 @@ datasource db {
 
 model customer {
   id      Int      @id @default(autoincrement())
+  email String @unique
+  password String
   nama    String
   alamat  String
   account account[]

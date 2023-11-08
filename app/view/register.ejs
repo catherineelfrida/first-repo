@@ -1,0 +1,28 @@
+<h2>Register</h2>
+<form 
+ action="/api/v1/register" method="post">
+    <% if(messages.error){ %>
+        <span style="color:red">
+            <%= messages.error %>
+        </span>
+    <% } %> 
+    <div>
+        <label for="nama">Full Name:</label>
+        <input type="text" id="nama" name="nama" required>
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+      <label for="alamat">Alamat:</label>
+      <input type="alamat" id="alamat" name="alamat" required>
+  </div>
+    <div>
+        <input type="submit" value="Register">
+    </div>
+</form>
