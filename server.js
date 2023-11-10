@@ -4,6 +4,7 @@ const swaggerUI = require('swagger-ui-express')
 const path = require('path')
 const flash = require('express-flash')
 const session = require("express-session")
+const passport = require('./utils/passport')
 
 const app = express()
 const port = 3000
@@ -17,15 +18,15 @@ app.use(session({ // config middleware session
   saveUninitialized: true,
 }))
 app.use(flash()) // register flash middleware ke express -> req.flash
-// app.use(passport.initialize());
-// app.use(passport.session())
+app.use(passport.initialize());
+app.use(passport.session())
 
 app.set("view engine", "ejs"); // register ejs sebagai view engine flash
 app.set("views", path.join(__dirname, './app/view')) // mengubah folder views ke 
 // app view
 
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerJSON))
-app.use('/api/v1', routers)
+app.use(routers)
 
 app.listen(port, () => {
   console.log(`Server run at http://localhost:${port}`)

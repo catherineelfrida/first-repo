@@ -41,7 +41,7 @@ module.exports = {
     })
   },
   async create(req, res) {
-    try {
+    try { 
       const { nama, alamat, email, password } = req.body
       
       // Validasi input
@@ -50,12 +50,11 @@ module.exports = {
       }
 
       // Tambahkan nasabah baru
+      const createdBy = req.user
       const newCustomer = await prismadb.customer.create({
         data: {
-          nama,
-          email,
-          password,
-          alamat
+          ...req.body,
+        createdBy: createdBy.nama
         }
       })
       

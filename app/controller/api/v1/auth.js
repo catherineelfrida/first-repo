@@ -1,8 +1,8 @@
 const { PrismaClient } = require('@prisma/client')
 const { encryptPassword, checkPassword } = 
     require('../../../../utils/auth')
-// const { JWTsign } = 
-//     require('../../../../utils/jwt')
+const { JWTsign } = 
+    require('../../../../utils/jwt')
 
 const prisma = new PrismaClient();
 
@@ -27,24 +27,23 @@ module.exports = {
                 message: "Password Salah!"
             })
         }
-        // delete user.password
-        // const token = await JWTsign(user)
+        delete user.password
+        const token = await JWTsign(user)
         return res.status(201).json({
             status: "Success!",
             message: "Berhasil Login!",
-            data: { user } 
-            // data: { user, token } 
+            data: { user, token } 
         })
     },
-    // async whoami(req, res){
-    //     return res.status(200).json({
-    //         status: "Success!",
-    //         message: "OK",
-    //         data: {
-    //             user: req.user
-    //         }
-    //     })
-    // },
+    async whoami(req, res){
+        return res.status(200).json({
+            status: "Success!",
+            message: "OK",
+            data: {
+                user: req.user
+            }
+        })
+    },
     async register(req, res){
         const {email, password, nama, alamat} = req.body;
         const user = await prisma.customer.findFirst({
@@ -102,20 +101,23 @@ module.exports = {
             next(e) // untuk mengirim error ke middleware dan ditampilkan di ejs
         }
     },
-    // authUser: async (email, password, done) => {
-    //     try{
-    //         const user = await prisma.user.findUnique({
-    //             where: {email}
-    //         })
+    authUser: async (email, password, done) => {
+        try{
+            const user = await prisma.customer.findUnique({
+                where: {email}
+            })
 
-    //         if(!user || !await checkPassword(password, user.password)){
-    //             return done(null, false, {message: 'Invalid email or password'})
-    //         }
+            if(!user || !await checkPassword(password, user.password)){
+                return done(null, false, {message: 'Invalid email or password'})
+            }
 
-    //         return done(null, user)
-    //     } catch (err) {
-    //         return done(null, false, {message: err.message})
-    //     }
+            return done(null, user)
+        } catch (err) {
+            return done(null, false, {message: err.message})
+        }
+    },
+    // dashboard: async (req, res) => {
+    //     res.render('dashboard.ejs'), {user: req.user}
     // },
     // oauth: async (req, res) => {
     //     const token = await JWTsign({ 
