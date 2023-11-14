@@ -4,8 +4,8 @@ const passport = require('../utils/passport')
 
 const router = express.Router()
 
-router.post('/api/v1/auth/login', controller.auth.login)
-router.post('/api/v1/auth/register', controller.auth.register)
+router.post('/auth/login', controller.auth.login)
+router.post('/auth/register', controller.auth.register)
 
 //view
 //register
@@ -41,6 +41,6 @@ router.post('/login', passport.authenticate('local', {
 // const passportOAUTH = require('../utils/oauth');
 
 const { auth } = require('../utils/jwt')
-router.get('/auth/whoami', auth, controller.auth.whoami)
+router.get('/auth/authenticate', auth, controller.auth.whoami)
 
 module.exports = router
