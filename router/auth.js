@@ -4,8 +4,8 @@ const passport = require('../utils/passport')
 
 const router = express.Router()
 
-router.post('api/v1/auth/login', controller.auth.login)
-router.post('api/v1/auth/register', controller.auth.register)
+router.post('/api/v1/auth/login', controller.auth.login)
+router.post('/api/v1/auth/register', controller.auth.register)
 
 //view
 //register

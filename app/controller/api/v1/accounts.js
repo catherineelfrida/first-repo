@@ -57,8 +57,24 @@ module.exports = {
         data: newAccount
       })
     } catch (error) {
-      console.error('Error:', error)
+      // console.error('Error:', error)
       res.status(500).json({ error: 'Terjadi kesalahan server.' })
     }
+  },
+  async destroy(req, res){
+    if(isNaN(req.params.id)) {
+      return res.status(400).json({
+        status: "failed",
+        code: 400,
+        message: "Bad request! Id is required"
+      })
+    }
+  
+    await prismadb.account.delete({
+      where: { accnumber: parseInt(req.params.id) }
+    })
+  
+    // no content
+    return res.status(204).json()
   }
 }
