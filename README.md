@@ -22,3 +22,8 @@ npx prisma migrate dev --name updateBankAccount
 ```
 npx prisma migrate dev 
 ```
+
+### untuk reset struktur database via prisma
+```
+npx prisma migrate reset
+```
