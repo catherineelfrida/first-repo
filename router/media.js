@@ -22,8 +22,8 @@ router.post('/api/v1/qrcode', controller.media.qrcode)
 
 //imagekit
 router.post('/api/v1/upload/imagekit',
-        multer.single('image'),
-        controller.media.imagekitUpload
+  multer.single('image'),
+  controller.media.imagekitUpload
 )
 
 module.exports = router;

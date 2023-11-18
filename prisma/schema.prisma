@@ -16,7 +16,17 @@ model customer {
   password String
   nama    String
   alamat  String
+  image image[]
   account account[]
+}
+
+model image {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  imageUrl    String   
+  customerId  Int     
+  customer    customer @relation(fields: [customerId], references: [id])
 }
 
 model account {
