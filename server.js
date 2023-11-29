@@ -30,7 +30,7 @@ app.set("views", path.join(__dirname, './app/view')) // mengubah folder views ke
 // app view
 
 Sentry.init({
-  dsn: 'https://48992ad1c3165e10e7c492852002617c@o4506303591874560.ingest.sentry.io/4506303599935488',
+  dsn: process.env.SENTRY_DSN,
   integrations: [
     // enable HTTP calls tracing
     new Sentry.Integrations.Http({ tracing: true }),
