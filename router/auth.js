@@ -1,24 +1,34 @@
 const express = require('express')
+const router = express.Router()
 const controller = require('../app/controller')
 const passport = require('../utils/passport')
-
-const router = express.Router()
+const { auth } = require('../utils/jwt')
 
 router.post('/auth/login', controller.auth.login)
 router.post('/auth/register', controller.auth.register)
+router.get('/auth/authenticate', auth, controller.auth.whoami)
 
 //view
-//register
 router.get('/register', (req, res) => {
   res.render('register.ejs')
 })
 router.post('/register', controller.auth.registerForm)
 
-//login
 router.get('/login', (req, res) => {
   res.render('login.ejs')
 })
 // router.post('/login', controller.auth.loginForm)
+
+router.get('/forgetPassword', (req, res) => {
+  res.render('forgetPassword.ejs')
+})
+router.post('/forgetPassword', controller.auth.forgetPassword)
+
+router.get('/resetPassword/:token', (req, res) => {
+  const { token } = req.params
+  res.render('resetPassword.ejs', { token })
+})
+router.post('/resetPassword/:token', controller.auth.resetPassword)
 
 // integrasikan passport ke router
 router.post('/login', passport.authenticate('local', {
@@ -40,7 +50,5 @@ router.post('/login', passport.authenticate('local', {
 
 // const passportOAUTH = require('../utils/oauth');
 
-const { auth } = require('../utils/jwt')
-router.get('/auth/authenticate', auth, controller.auth.whoami)
 
 module.exports = router

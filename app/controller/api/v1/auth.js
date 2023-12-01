@@ -1,8 +1,12 @@
 const { PrismaClient } = require('@prisma/client')
+const ejs = require('ejs')
 const { encryptPassword, checkPassword } = 
     require('../../../../utils/auth')
 const { JWTsign } = 
     require('../../../../utils/jwt')
+const { sendMail, sendMailHTML } = require('../../../../utils/mailer')
+const jwt = require('jsonwebtoken')
+let { JWT_SECRET_KEY } = process.env;
 
 const prisma = new PrismaClient();
 
@@ -130,4 +134,69 @@ module.exports = {
     //         data: { token }
     //     })
     // }
+    async forgetPassword(req, res){
+        const { email } = req.body;
+        const user = await prisma.customer.findFirst({
+            where: { email }
+        })
+
+        if(!user){
+            return res.status(404).json({
+                status: "Failed!",
+                message: "User tidak ditemukan!"
+            })
+        }
+
+        const url = `${req.protocol}://${req.headers.host}`
+        const token = jwt.sign({ email: user.email }, JWT_SECRET_KEY , { expiresIn: '15m' })
+
+        ejs.renderFile(__dirname + "../../../view/templates/register.ejs", 
+        { 
+            url: `http://localhost:3000/resetPassword/${token}` 
+        }, 
+        function (err, data) {
+            if (err) {
+                console.log(err);
+            } else {
+                sendMailHTML(email, `Reset Password`, data)
+            }
+        })
+
+        res.status(200).json({
+            status: 'Success!',
+            message: 'Berhasil mengirim email reset password',
+            url: url
+        })
+    },
+    async resetPassword(req, res){
+        try {
+            const { token } = req.params
+            const { password, confirmPassword } = req.body
+            
+            if(password !== confirmPassword){
+                return res.status(400).json({
+                    status: 'failed',
+                    message: 'New Password and Confirm Password are not match!'
+                })
+            }
+
+            const user = jwt.verify(token, JWT_SECRET_KEY)
+    
+            const updatedUser = prisma.customer.update({
+                where: { email: user.email },
+                data: { 
+                    password: await encryptPassword(password) 
+                }
+            })
+
+            return res.status(200).json({
+                status: 'success',
+                message: 'Password berhasil di-reset!',
+                data: updatedUser
+            })
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ error: 'Terjadi kesalahan server.' })
+        }
+    }
 } 
