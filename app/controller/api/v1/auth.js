@@ -70,6 +70,7 @@ module.exports = {
             }
         });
 
+        req.io.emit('notification', 'Hi, this is a welcome notification! You have successfully registered');
         return res.status(201).json({ 
             status: 'success', 
             code: 200, 
@@ -189,6 +190,7 @@ module.exports = {
                 }
             })
 
+            req.io.emit('notification', 'Hi, this is a notification! Your password has been reset');
             return res.status(200).json({
                 status: 'success',
                 message: 'Password berhasil di-reset!',

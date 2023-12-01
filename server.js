@@ -8,10 +8,13 @@ const flash = require('express-flash')
 const session = require("express-session")
 const passport = require('./utils/passport')
 const morgan=require('morgan')
+const routers = require('./router')
 
 const app = express()
 const port = 3000
-const routers = require('./router')
+
+const http = require('http').Server(app)
+const io = require('./utils/io')(http)
 
 app.use(morgan('combined'))
 app.use(express.json())
@@ -45,7 +48,13 @@ app.use(Sentry.Handlers.requestHandler());
 app.use(Sentry.Handlers.tracingHandler());
 
 app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerJSON))
+
 app.use(routers)
+
+app.use((req, res, next) => {
+  req.io = io;
+  return next();
+});
 
 app.get("/debug-sentry", function mainHandler(req, res) {
   throw new Error("My first Sentry error!");

@@ -1,4 +1,6 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 <h2>Login</h2>
+
 <form action="/login" method="post">
     <% if(messages.error){ %>
         <span style="color:red">
@@ -20,11 +22,20 @@
         <a href="/forgetPassword"> Lupa Password? </a>
     </div>
 </form>
-<!-- <script src="/socket.io/socket.io.js" charset="utf-8"></script>
-<script type="text/javascript">
-    var io = io()
-    io.on('notification', function(data) {
-        console.log(data)
-        alert(data)
-    })
-</script> -->
+<script>
+    const socket = io();
+
+    socket.emit('register');
+
+    function changePassword() {
+      socket.emit('passwordChanged');
+    }
+
+    socket.on('notification', (data) => {
+      if (data.type === 'passwordChanged') {
+        alert(data.message);
+      } else if (data.type === 'welcome') {
+        alert(data.message);
+      }
+    });
+</script>
